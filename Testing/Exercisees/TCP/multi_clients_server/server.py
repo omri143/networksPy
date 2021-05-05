@@ -12,7 +12,7 @@ read_clients = []
 print("Server has been initialized")
 
 while True:
-    ready_to_read, read_to_listen, err_in = select.select([server_socket] + read_clients, [], [])
+    ready_to_read, ready_to_write, err_in = select.select([server_socket] + read_clients, [], [])
     for sock in ready_to_read:
         if sock is server_socket:
             (client_socket, client_address) = sock.accept()
