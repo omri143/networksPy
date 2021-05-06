@@ -6,11 +6,17 @@ SERVER_PORT = 5555
 
 
 def print_client_sockets(client_sockets):
+    """
+    Prints the connected sockets
+    :param client_sockets:sockets list
+    :return:
+    """
     for c in client_sockets:
         print("\t", c.getpeername())
 
 
 def main():
+
     print("Initializing Server....")
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server_socket.bind((SERVER_ADDRESS, SERVER_PORT))
