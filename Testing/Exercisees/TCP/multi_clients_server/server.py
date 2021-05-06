@@ -9,6 +9,7 @@ def print_client_sockets(client_sockets):
     for c in client_sockets:
         print("\t", c.getpeername())
 
+
 def main():
     print("Initializing Server....")
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -18,19 +19,22 @@ def main():
     print("Server has been initialized")
 
     while True:
-    ready_to_read, ready_to_write, err_in = select.select([server_socket] + read_clients, [], [])
-    for sock in ready_to_read:
-        if sock is server_socket:
-            (client_socket, client_address) = sock.accept()
-            print(client_address[0] + " Has joined")
-            read_clients.append(sock)
-        else:
-            data = sock.recv(1024).decode()
-            if data == "":
-                print("Disconnection")
-                read_clients.remove(sock)
+        ready_to_read, ready_to_write, err_in = select.select([server_socket] + read_clients, [], [])
+        for sock in ready_to_read:
+            if sock is server_socket:
+                (client_socket, client_address) = sock.accept()
+                print(client_address[0] + " Has joined")
+                read_clients.append(sock)
+                print_client_sockets(read_clients)
             else:
-                print(data)
+                data = sock.recv(1024).decode()
+                if data == "":
+                    print("Disconnection")
+                    socket.close()
+                    read_clients.remove(sock)
+                else:
+                    print(data)
+
 
 if __name__ == '__main__':
     main()
