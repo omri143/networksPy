@@ -24,7 +24,7 @@ def main():
             if sock is server_socket:
                 (client_socket, client_address) = sock.accept()
                 print(client_address[0] + " Has joined")
-                read_clients.append(sock)
+                read_clients.append(client_socket)
                 print_client_sockets(read_clients)
             else:
                 data = sock.recv(1024).decode()
