@@ -16,7 +16,6 @@ def print_client_sockets(client_sockets):
 
 
 def main():
-
     print("Initializing Server....")
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server_socket.bind((SERVER_ADDRESS, SERVER_PORT))
@@ -25,10 +24,11 @@ def main():
     print("Server has been initialized")
 
     while True:
-        ready_to_read, ready_to_write, err_in = select.select([server_socket] + read_clients, [], [])
+        ready_to_read, ready_to_write, err_in = select.select([server_socket] + read_clients, [], [])  # Listening to
+        # available sockets
         for sock in ready_to_read:
-            if sock is server_socket:
-                (client_socket, client_address) = sock.accept()
+            if sock is server_socket:  # if the socket belongs to the server
+                (client_socket, client_address) = sock.accept()  # accepting new socket connection
                 print(client_address[0] + " Has joined")
                 read_clients.append(client_socket)
                 print_client_sockets(read_clients)
