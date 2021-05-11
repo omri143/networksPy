@@ -67,8 +67,12 @@ def main():
         for message in messages_to_send:
             current_socket, data = message
             if current_socket in ready_to_write:
-                current_socket.send(data.encode())
-                messages_to_send.remove(message)
+                try:
+                    current_socket.send(data.encode())
+                    messages_to_send.remove(message)
+
+                except OSError:
+                    print("ERROR")
 
 
 if __name__ == '__main__':
