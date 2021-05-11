@@ -43,7 +43,7 @@ def main():
                 read_clients.append(client_socket)
                 print_client_sockets(read_clients)
             else:
-                messages_to_send.append((sock, "Hi" + sock.getpeername()[0]))
+                messages_to_send.append((sock, "Hi from " + socket.gethostname() ))
 
                 """
                    Try to receive data from one of the clients. If successful, the server will print the data.
