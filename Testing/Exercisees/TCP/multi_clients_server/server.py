@@ -58,16 +58,12 @@ def main():
 
                 if data == "":
                     print(sock.getpeername()[0] + " Disconnected")
+                    sock.close()
                 else:
                     print(data)
         """
-            Sending the messages to the clients     |
-                                                    |
-                                                    |
-                                                  \    /
-                                                   \  /  
-                                                    \/   
-        """  /
+            Sending the messages to the clients     
+        """
         for message in messages_to_send:
             current_socket, data = message
             if current_socket in ready_to_write:
