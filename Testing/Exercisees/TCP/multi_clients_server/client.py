@@ -9,3 +9,4 @@ client_socket.connect((SERVER_ADDRESS, SERVER_PORT))
 while True:
     client_socket.send(("Hi from " + client_socket.getpeername()[0] + "\n").encode())
     print(client_socket.recv(1024).decode())
+    time.sleep(10)
