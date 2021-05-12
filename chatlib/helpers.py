@@ -1,5 +1,7 @@
 import json
 
+JSON_QUESTIONS_ATTRIBUTES = ["id", "text", "answers", "correct_answer"]
+
 
 ### COMMON METHODS ####
 
@@ -42,10 +44,10 @@ def parse_json_doc(path):
     The function parses the json string into dict
     :param path: json file path
     :return: json string
-    :rtype: dict, str
+    :rtype: dict
     """
     if ".json" in path:
         json_data = json.loads("".join(read_file(path)))
     else:
-        json_data = "ERROR"
+        json_data = {"er": "ERROR"}
     return json_data
