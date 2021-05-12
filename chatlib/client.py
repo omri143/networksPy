@@ -116,7 +116,7 @@ def play_question(conn):
     elif command in chatlib.PROTOCOL_SERVER["send_question_msg"]:
         recv_data_parsed = chatlib.split_data(data, 6)
         print(recv_data_parsed[1])  # prints the question
-        helpers.format_list_print(recv_data_parsed)
+        helpers.format_list_print(recv_data_parsed, 2)
         ans = input("Enter the number of the answer: ")
         (ans_cmd, ans_data) = build_send_recv_parse(conn, chatlib.PROTOCOL_CLIENT["send_ans_msg"],
                                                     recv_data_parsed[0] + "#" + ans)
