@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<questions>
+    <question id="0001">
+        <text>How much is 2 + 2?</text>
+        <answers>
+            <answer id="1">1</answer>
+            <answer id="2">2</answer>
+            <answer id="3">4</answer>
+            <answer id="4">3</answer>
+        </answers>
+        <correct_answer_id>3</correct_answer_id>
+    </question>
+    <question id="0002">
+        <text>How much is 5 + 8</text>
+        <answers>
+            <answer id="1">13</answer>
+            <answer id="2">7</answer>
+            <answer id="3">4</answer>
+            <answer id="4">3</answer>
+        </answers>
+        <correct_answer_id>1</correct_answer_id>
+    </question>
+    <question id="0003">
+        <text>How much is 4 * 3?</text>
+        <answers>
+            <answer id="1">9</answer>
+            <answer id="2">12</answer>
+            <answer id="3">1</answer>
+            <answer id="4">3</answer>
+        </answers>
+        <correct_answer_id>2</correct_answer_id>
+    </question>
+    <question id="0004">
+        <text>How much is 5 * 3?</text>
+        <answers>
+            <answer id="1">9</answer>
+            <answer id="2">12</answer>
+            <answer id="3">15</answer>
+            <answer id="4">3</answer>
+        </answers>
+        <correct_answer_id>3</correct_answer_id>
+    </question>
+
+</questions>
