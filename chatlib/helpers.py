@@ -1,7 +1,7 @@
 import json
 
+
 ### COMMON METHODS ####
-import tarfile
 
 
 def get_digits_count(num):
@@ -17,16 +17,35 @@ def get_digits_count(num):
     return count
 
 
-def format_list_print(recv_data_list):
-    for i in range(2, len(recv_data_list)):
-        print(str(i - 1) + ". " + recv_data_list[i])
+def format_list_print(data_list, offset):
+    for i in range(offset, len(data_list)):
+        print(str(i - 1) + ". " + data_list[i])
 
 
-### Json ####
-def parse_json_doc(path):
-    json_data_str = None
-    with open(path, 'r') as f:
-        json_data_str = f.readlines()
+### Json Methods ####
+def read_file(path):
+    """
+    The function reads the file
+    :param path: file path
+    :return: list with all the lines
+    :rtype:list
+    """
+    data = None
+    with open(path, 'r') as f:  # Opens the file on 'read mode'
+        data = f.readlines()
         f.close()
-    json_data = json.loads("".join(json_data_str))
+    return data
+
+
+def parse_json_doc(path):
+    """
+    The function parses the json string into dict
+    :param path: json file path
+    :return: json string
+    :rtype: dict, str
+    """
+    if ".json" in path:
+        json_data = json.loads("".join(read_file(path)))
+    else:
+        json_data = "ERROR"
     return json_data
