@@ -32,7 +32,7 @@ def read_file(path):
     :return: list with all the lines
     :rtype:list
     """
-    data = None
+    data = []
     with open(path, 'r') as f:  # Opens the file on 'read mode'
         data = f.readlines()
         f.close()
