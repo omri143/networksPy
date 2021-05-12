@@ -43,7 +43,7 @@ def main():
                 read_clients.append(client_socket)
                 print_client_sockets(read_clients)
             else:
-                messages_to_send.append((sock, "Hi from " + socket.gethostname() ))
+                messages_to_send.append((sock, "Hi from " + socket.gethostname()))
 
                 """
                    Try to receive data from one of the clients. If successful, the server will print the data.
@@ -57,7 +57,7 @@ def main():
                     print_client_sockets(read_clients)
 
                 if data == "":
-                    print(sock.getpeername()[0] + " Disconnected")
+                    print("Client disconnected")
                     sock.close()
                 else:
                     print(data)
@@ -72,7 +72,7 @@ def main():
                     messages_to_send.remove(message)
 
                 except OSError:
-                    print("ERROR")
+                    print("Client disconnected")
 
 
 if __name__ == '__main__':
