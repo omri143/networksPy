@@ -14,7 +14,7 @@ logged_users = {}  # a dictionary of client hostnames to usernames - will be use
 
 ERROR_MSG = "Error! "
 SERVER_PORT = 5678
-SERVER_IP = "0.0.0.0"
+SERVER_IP = "0.0.0.0"  # server ip
 JSON_QUESTIONS_CONVERSIONS_ATTRIBUTES = ["id", "text", "answers", "correct_answer"]  # Used to change the format of
 # the json structure
 JSON_QUESTIONS_ATTRIBUTES = ["question", "answers", "correct"]
