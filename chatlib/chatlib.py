@@ -32,7 +32,7 @@ PROTOCOL_SERVER = {
     "send_question_msg": "YOUR_QUESTION",
     "correct_ans_msg": "CORRECT_ANSWER",
     "no_question_ans_msg": "NO_QUESTIONS",
-    "error_msg": " ERROR"
+    "error_msg": "ERROR"
 }
 
 # Other constants
