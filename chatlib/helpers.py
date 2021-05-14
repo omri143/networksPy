@@ -23,6 +23,7 @@ def format_list_print(data_list, offset):
 
 
 ### Json Methods ####
+
 def read_file(path):
     """
     The function reads the file
@@ -52,11 +53,19 @@ def parse_json_doc(path):
 
 
 def parse_json_dict_to_lst(json_dict, key, json_attributes):
+    """
+    The function creates a list a specific key inside the dictionary
+    :param json_dict: dictionary that contains the json file data
+    :param key: lookup key
+    :param json_attributes: attributes  inside the dictionary (aka json
+    :return: list with key parameters
+    :rtype: list
+    """
     json_lst = []
     # Looping on the keys inside the dictionary
     for keys in json_dict.keys():
-        #
-        if keys == key:
+        if keys == key:  # checks if the key inside the dictionary
+            # Looping on the attributes inside the json and converts it to
             for att in json_attributes:
                 json_lst.append(json_dict[key][att])
             return json_lst
