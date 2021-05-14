@@ -65,7 +65,7 @@ def parse_json_dict_to_lst(json_dict, key, json_attributes):
     # Looping on the keys inside the dictionary
     for keys in json_dict.keys():
         if keys == key:  # checks if the key inside the dictionary
-            # Looping on the attributes inside the json and converts it to
+            # Looping on the attributes inside the json and converts it to a list
             for att in json_attributes:
                 json_lst.append(json_dict[key][att])
             return json_lst
