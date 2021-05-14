@@ -114,14 +114,12 @@ def handle_get_score_message(conn, username):
 
 def handle_logout_message(conn):
     """
-	Closes the given socket (in laster chapters, also remove user from logged_users dictionary)
-	Recieves: socket
+	Closes the given socket (in later chapters, also remove user from logged_users dictionary)
+	Receives: socket
 	Returns: None
 	"""
     global logged_users
-
-
-# Implement code ...
+    conn.close()
 
 
 def handle_login_message(conn, data):
@@ -133,6 +131,15 @@ def handle_login_message(conn, data):
 	"""
     global users  # This is needed to access the same users dictionary from all functions
     global logged_users  # To be used later
+    user_data = chatlib.split_data(data, 2)
+    if user_data[0] in users.keys():
+        if user_data[1] == users[user_data[0]]["password"]:
+            build_and_send_message(conn, chatlib.PROTOCOL_SERVER["login_ok_msg"], "")
+        else:
+            build_and_send_message(conn, chatlib.PROTOCOL_SERVER["login_failed_msg"], "Error! Wrong Password")
+
+    else:
+        build_and_send_message(conn, chatlib.PROTOCOL_SERVER["login_failed_msg"], "Error! User not exists")
 
 
 # Implement code ...
@@ -145,6 +152,12 @@ def handle_client_message(conn, cmd, data):
 	Returns: None
 	"""
     global logged_users  # To be used later
+    if cmd == chatlib.PROTOCOL_CLIENT['login_msg']:
+        handle_login_message(conn, data)
+    elif cmd == chatlib.PROTOCOL_CLIENT["logout_msg"]:
+        handle_logout_message(conn)
+    else:
+        send_error(conn, ERROR_MSG + "Unknown command")
 
 
 # Implement code ...
@@ -155,10 +168,15 @@ def main():
     global users
     global questions
 
+    clients_list = []
     print("Welcome to Trivia Server!")
-
-
-# Implement code ...
+    server_socket = setup_socket()
+    server_socket.listen()
+    users = load_user_database("C:\\Users\\OMRI\\PycharmProjects\\networksPy\\chatlib\\users.json")
+    while True:
+        (client_sock, client_add) = server_socket.accept()
+        cmd, data = recv_message_and_parse(client_sock)
+        handle_client_message(client_sock, cmd, data)
 
 
 if __name__ == '__main__':
