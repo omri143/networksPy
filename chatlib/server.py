@@ -173,8 +173,8 @@ def main():
     server_socket = setup_socket()
     server_socket.listen()
     users = load_user_database("C:\\Users\\OMRI\\PycharmProjects\\networksPy\\chatlib\\users.json")
+    (client_sock, client_add) = server_socket.accept()
     while True:
-        (client_sock, client_add) = server_socket.accept()
         cmd, data = recv_message_and_parse(client_sock)
         handle_client_message(client_sock, cmd, data)
 
