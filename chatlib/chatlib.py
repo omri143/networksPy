@@ -1,5 +1,3 @@
-import helpers
-
 # Protocol Constants
 
 CMD_FIELD_LENGTH = 16  # Exact length of cmd field (in bytes)
@@ -72,7 +70,7 @@ def parse_message(data):
     """
     data_lst = data.split(DELIMITER)  # splitting the data
     if len(data_lst) == 3:  # if the list has 3 fields (2 delimiters)
-        data_lst[1] = data_lst[1].replace(" ", "")
+        data_lst[1] = data_lst[1].replace(" ", "") # list structure: [command, data length , data]
         if data_lst[1].isnumeric() and int(data_lst[1]) == len(data_lst[2]):  # if the middle field contains only
             # numbers and the length of the message is correct
             msg = data_lst[2]
@@ -92,10 +90,12 @@ def build_message(cmd, data):
     Gets command name (str) and data field (str) and creates a valid protocol message
     :return: str, or None if error occurred
     """
+    # if the data and the cmd are according to protocol
     if (MAX_DATA_LENGTH > len(data) >= 0) and (len(cmd) < CMD_FIELD_LENGTH):
+        # builds the message to the server
         full_msg = [cmd, " " * (CMD_FIELD_LENGTH - len(cmd)), DELIMITER,
                     str(len(data)).zfill(4), DELIMITER, data]
-        full_msg = "".join(full_msg)
+        full_msg = "".join(full_msg)  # converts the msg from list type to string type
     else:
         full_msg = ERROR_RETURN
     return full_msg
