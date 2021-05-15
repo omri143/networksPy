@@ -93,10 +93,8 @@ def build_message(cmd, data):
     :return: str, or None if error occurred
     """
     if (MAX_DATA_LENGTH > len(data) >= 0) and (len(cmd) < CMD_FIELD_LENGTH):
-        zero_count = LENGTH_FIELD_LENGTH - helpers.get_digits_count(abs(len(data) - LENGTH_FIELD_LENGTH))
         full_msg = [cmd, " " * (CMD_FIELD_LENGTH - len(cmd)), DELIMITER,
-                    "0" * zero_count,
-                    str(len(data)), DELIMITER, data]
+                    str(len(data)).zfill(4), DELIMITER, data]
         full_msg = "".join(full_msg)
     else:
         full_msg = ERROR_RETURN
