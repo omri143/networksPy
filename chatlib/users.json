@@ -1,13 +1,26 @@
 {
   "omri":
-        {"password": "1234",
-          "score": 0,
-          "asked_questions": []
-        },
-  "omri1":
         {
           "password": "1234",
-          "score": 0,
+          "score": 50,
+          "asked_questions": []
+        },
+  "Tal":
+        {
+          "password": "1234",
+          "score": 10,
+          "asked_questions": []
+        },
+  "Or":
+        {
+          "password": "1234",
+          "score": 15,
+          "asked_questions": []
+        },
+  "Amit":
+        {
+          "password": "1234",
+          "score": 30,
           "asked_questions": []
         }
 
