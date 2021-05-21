@@ -19,5 +19,10 @@
     "text": "How much is 5 * 3?",
     "answers": [18,13,28,15],
     "correct_answer": 4
+  },{
+    "id": 5,
+    "text": "What is the capital of Israel?",
+    "answers": ["Beirut","Washington DC","Jerusalem","Paris"],
+    "correct_answer": 3
   }]
 }
