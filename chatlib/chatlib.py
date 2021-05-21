@@ -46,7 +46,10 @@ def join_data(msg_fields):
     i = 0
     for field in msg_fields:
         if type(field) is not str:  # if the type of the object is not string
-            msg_fields[i] = str(field)
+            if type(field) is list:
+                msg_fields[i] = DATA_DELIMITER.join([str(e) for e in field])
+            else:
+                msg_fields[i] = str(field)
         i += 1
     return DATA_DELIMITER.join(msg_fields)
 
@@ -70,7 +73,7 @@ def parse_message(data):
     """
     data_lst = data.split(DELIMITER)  # splitting the data
     if len(data_lst) == 3:  # if the list has 3 fields (2 delimiters)
-        data_lst[1] = data_lst[1].replace(" ", "") # list structure: [command, data length , data]
+        data_lst[1] = data_lst[1].replace(" ", "")  # list structure: [command, data length , data]
         if data_lst[1].isnumeric() and int(data_lst[1]) == len(data_lst[2]):  # if the middle field contains only
             # numbers and the length of the message is correct
             msg = data_lst[2]
