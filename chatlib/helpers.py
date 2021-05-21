@@ -70,3 +70,8 @@ def parse_json_dict_to_lst(json_dict, key, json_attributes):
                 json_lst.append(json_dict[key][att])
             return json_lst
     return [None]  # if the key is not inside the dictionary
+
+def updtae_json(json_dict , path):
+    if ".json" in path:
+        with open(path, 'w') as outfile:
+            json.dump(json_dict, outfile)
