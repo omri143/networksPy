@@ -75,4 +75,4 @@ def parse_json_dict_to_lst(json_dict, key, json_attributes):
 def update_json(json_dict, path):
     if ".json" in path:
         with open(path, 'w') as outfile:
-            json.dump(json_dict, outfile)
+            outfile.write(json.dumps(json_dict, indent=4))

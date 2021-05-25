@@ -1,1 +1,19 @@
-{"Omri": {"password": "1234", "score": 50, "asked_questions": []}, "Or": {"password": "1234", "score": 15, "asked_questions": []}, "Amit": {"password": "1234", "score": 30, "asked_questions": []}}
+{
+    "Omri": {
+        "password": "1234",
+        "score": 55,
+        "asked_questions": [
+            "5"
+        ]
+    },
+    "Or": {
+        "password": "1234",
+        "score": 15,
+        "asked_questions": []
+    },
+    "Amit": {
+        "password": "1234",
+        "score": 30,
+        "asked_questions": []
+    }
+}
