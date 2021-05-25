@@ -29,6 +29,7 @@ PROTOCOL_SERVER = {
     "high_score_ans_msg": "ALL_SCORE",
     "send_question_msg": "YOUR_QUESTION",
     "correct_ans_msg": "CORRECT_ANSWER",
+    "wrong_ans_msg": "WRONG_ANSWER",
     "no_question_ans_msg": "NO_QUESTIONS",
     "error_msg": "ERROR"
 }
@@ -97,7 +98,7 @@ def build_message(cmd, data):
     if (MAX_DATA_LENGTH > len(data) >= 0) and (len(cmd) < CMD_FIELD_LENGTH):
         # builds the message to the server
         full_msg = [cmd, " " * (CMD_FIELD_LENGTH - len(cmd)), DELIMITER,
-                    str(len(data)).zfill(4), DELIMITER, data]
+                    str(len(data)).zfill(LENGTH_FIELD_LENGTH), DELIMITER, data]
         full_msg = "".join(full_msg)  # converts the msg from list type to string type
     else:
         full_msg = ERROR_RETURN
