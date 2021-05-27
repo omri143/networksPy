@@ -21,6 +21,7 @@ JSON_QUESTIONS_CONVERSIONS_ATTRIBUTES = ["id", "text", "answers", "correct_answe
 # the json structure
 JSON_QUESTIONS_ATTRIBUTES = ["question", "answers", "correct"]
 CORRECT_ANSWER_SCORE = 5
+messages_to_send = []  # Outbound messages list
 
 
 # ### debug ###
@@ -42,9 +43,9 @@ def build_and_send_message(conn, code, msg):
 	   Parameters: conn (socket object), code (str), data (str)
 	   Returns: Nothing
 	   """
-    debug_msg = chatlib.build_message(code, msg)
-    conn.send(debug_msg.encode())
-    print("[SERVER] ", debug_msg)  # Debug print
+    msg = chatlib.build_message(code, msg)
+    messages_to_send.append((conn, msg))
+    print("[SERVER] ", msg)  # Debug print
 
 
 def recv_message_and_parse(conn):
@@ -59,6 +60,12 @@ def recv_message_and_parse(conn):
     cmd, data = chatlib.parse_message(full_msg)
     print("[CLIENT - " + socket.gethostbyaddr(str(conn.getpeername()[0]))[0] + "]", full_msg)  # Debug print
     return cmd, data
+
+
+def print_client_sockets(client_sockets):
+    global logged_users
+    for sock in client_sockets:
+        print(logged_users[sock.getpeername()])
 
 
 # Data Loaders #
@@ -172,7 +179,7 @@ def handle_login_message(conn, data):
     user_data = chatlib.split_data(data, 2)  # Splitting the data field. For login message, there are two fields
     # [username, password]
     if user_data[0] in users.keys():  # check if the username exists
-        if user_data[1] == users[user_data[0]]["password"]:
+        if user_data[1] == users[user_data[0]]["password"]:  # check given password
             build_and_send_message(conn, chatlib.PROTOCOL_SERVER["login_ok_msg"], "")
             logged_users[conn.getpeername()] = user_data[0]
             print_debug(user_data)
@@ -185,6 +192,12 @@ def handle_login_message(conn, data):
 
 
 def create_random_question(username):
+    """
+        The function generates new question specific to the user
+    :param username: player's name
+    :return:question message and question id
+    :rtype: tuple
+    """
     global questions
     global users
     print_debug(questions)
@@ -205,7 +218,8 @@ def handle_question_message(conn, username):
     global questions
     global users
     data = ""
-    if all(elem in users[username]["asked_questions"] for elem in questions.keys()):
+    if all(elem in users[username]["asked_questions"] for elem in questions.keys()):  # check if the user was asked
+        # all the questions
         cmd = chatlib.PROTOCOL_SERVER["no_question_ans_msg"]
     else:
         cmd = chatlib.PROTOCOL_SERVER["send_question_msg"]
@@ -216,17 +230,24 @@ def handle_question_message(conn, username):
 
 
 def handle_answer_message(conn, username, data):
+    """
+    The function receives an answer from the user and checks it.
+    :param conn: open socket
+    :param username: player's name
+    :param data: information from the socket
+    :return:
+    """
     global users
     answer = chatlib.split_data(data, 2)  # Two fields: question_id#user_answer according to protocol
     print_debug(answer)
-    if str(questions[answer[0]][2]) == str(answer[1]):
-        users[username]["score"] += CORRECT_ANSWER_SCORE
+    if str(questions[answer[0]][2]) == str(answer[1]):  # check the answer
+        users[username]["score"] += CORRECT_ANSWER_SCORE  # updating user score
         build_and_send_message(conn, chatlib.PROTOCOL_SERVER["correct_ans_msg"], "")
     else:
         build_and_send_message(conn, chatlib.PROTOCOL_SERVER["wrong_ans_msg"], str(questions[answer[0]][2]))
 
 
-def handle_client_message(conn, cmd, data, username):
+def handle_client_message(conn, cmd, data):
     """
 	Gets message code and data and calls the right function to handle command
 	Receives: socket, message code and data
@@ -235,8 +256,6 @@ def handle_client_message(conn, cmd, data, username):
     global logged_users
     if cmd == chatlib.PROTOCOL_CLIENT['login_msg']:
         handle_login_message(conn, data)
-    elif cmd == chatlib.PROTOCOL_CLIENT["logout_msg"]:
-        handle_logout_message(conn)
     elif cmd == chatlib.PROTOCOL_CLIENT["get_personal_score_msg"]:
         handle_get_score_message(conn)
     elif cmd == chatlib.PROTOCOL_CLIENT["get_high_score_table_msg"]:
@@ -244,9 +263,9 @@ def handle_client_message(conn, cmd, data, username):
     elif cmd == chatlib.PROTOCOL_CLIENT["logged_in_msg"]:
         handle_logged_message(conn)
     elif cmd == chatlib.PROTOCOL_CLIENT["get_question_msg"]:
-        handle_question_message(conn, username)
+        handle_question_message(conn, logged_users[conn.getpeername()])
     elif cmd == chatlib.PROTOCOL_CLIENT["send_ans_msg"]:
-        handle_answer_message(conn, username, data)
+        handle_answer_message(conn, logged_users[conn.getpeername()], data)
     else:
         send_error(conn, ERROR_MSG + "Unknown command")
 
@@ -264,30 +283,55 @@ def tuple_sort_second_element_key(ele):
 
 # ### Main function ###
 def main():
+    """
+        Main function
+    :return:
+    """
     # Initializes global users and questions dictionaries using load functions, will be used later
     global users
     global questions
+    global messages_to_send
     global logged_users
-    # questions_path = input("Enter questions file path: ")
-    #  users_path = input("Enter user file path: ")
     users_path = "C:\\Users\\OMRI\\PycharmProjects\\networksPy\\chatlib\\users.json"
     questions_path = "C:\\Users\\OMRI\\PycharmProjects\\networksPy\\chatlib\\questions.json"
-    clients_list = []
+    client_sockets = []
     print("Welcome to Trivia Server!")
     server_socket = setup_socket()
     server_socket.listen()
     questions = load_questions(questions_path)
     users = load_user_database(users_path)
-    (client_sock, client_add) = server_socket.accept()
-
     while True:
-        try:
-            cmd, data = recv_message_and_parse(client_sock)
-            handle_client_message(client_sock, cmd, data, "Omri")
-        except OSError:  # Client disconnected
-            helpers.update_json(users, users_path)
-            users = load_user_database(users_path)
-            (client_sock, client_add) = server_socket.accept()  # waiting for a new client
+        readable, writable, err = select.select(client_sockets + [server_socket], client_sockets, [])
+        for client in readable:
+            if client is server_socket:
+                (client_socket, client_address) = server_socket.accept()
+                client_sockets.append(client_socket)
+            else:
+                try:
+                    cmd, data = recv_message_and_parse(client)  # Receiving data from the client
+                    if cmd == chatlib.PROTOCOL_CLIENT["logout_msg"]:  # Client wants to logout
+                        handle_logout_message(client)
+                        client_sockets.remove(client)
+                        print_client_sockets(client_sockets)
+                        writable.remove(client)
+
+                    else:  # client made another request
+                        handle_client_message(client, cmd, data)
+                    helpers.update_json(users, users_path)
+
+                except ConnectionResetError:  # client exited without logout message
+                    print_debug("Client ran into an error")
+                    logged_users.pop(client.getpeername())
+                    client_sockets.remove(client)
+                    writable.remove(client)
+
+        # Sending messages to the clients
+        for message in messages_to_send:
+            sock, data = message
+            if sock in writable:
+                sock.send(data.encode())
+                messages_to_send.remove(message)
+        messages_to_send.clear()
 
 
 if __name__ == '__main__':
